@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Bouncing Balls and Cube</title>
+    <style>
+        body { margin: 0; overflow: hidden; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // Set up the scene, camera, and renderer
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x00ff00); // Green background
+
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // Create the balls
+        const geometry = new THREE.SphereGeometry(1, 32, 32);
+        const materialRed = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+        const materialPurple = new THREE.MeshBasicMaterial({ color: 0x800080 });
+        const materialBlue = new THREE.MeshBasicMaterial({ color: 0x0000ff });
+
+        const ball1 = new THREE.Mesh(geometry, materialRed);
+        const ball2 = new THREE.Mesh(geometry, materialPurple);
+        const ball3 = new THREE.Mesh(geometry, materialBlue);
+
+        ball1.position.set(-2, 0, 0);
+        ball2.position.set(0, 0, 0);
+        ball3.position.set(2, 0, 0);
+
+        scene.add(ball1);
+        scene.add(ball2);
+        scene.add(ball3);
+
+        // Create the cube
+        const cubeGeometry = new THREE.BoxGeometry();
+        const cubeMaterial = new THREE.MeshBasicMaterial({ color: 0xffff00 }); // Yellow
+        const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+        cube.position.set(0, -2, 0);
+
+        scene.add(cube);
+
+        camera.position.z = 5;
+
+        // Animation variables
+        let ball1Speed = 0.05;
+        let ball2Speed = 0.04;
+        let ball3Speed = 0.03;
+
+        // Render loop
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Update ball positions
+            ball1.position.y += ball1Speed;
+            ball2.position.y += ball2Speed;
+            ball3.position.y += ball3Speed;
+
+            if (ball1.position.y > 2 || ball1.position.y < -2) ball1Speed = -ball1Speed;
+            if (ball2.position.y > 2 || ball2.position.y < -2) ball2Speed = -ball2Speed;
+            if (ball3.position.y > 2 || ball3.position.y < -2) ball3Speed = -ball3Speed;
+
+            // Rotate the cube
+            cube.rotation.x += 0.01;
+            cube.rotation.y += 0.01;
+
+            renderer.render(scene, camera);
+        }
+
+        animate();
+    </script>
+</body>
+</html>
